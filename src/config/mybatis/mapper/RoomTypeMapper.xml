@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.RoomTypeDao">
+	<!-- 房间类型插入操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.RoomType">
+		insert into room_type(type_id,type_name,type_price,roomNum,livedNum,avilableNum,status,remark) 
+		values(null,#{type_name},#{type_price},#{roomNum},#{livedNum},#{avilableNum},#{status},#{remark})
+	</insert>
+	<!-- 房间类型编辑操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.RoomType">
+		update room_type set type_name=#{type_name},type_price=#{type_price},roomNum=#{roomNum},livedNum=#{livedNum},avilableNum=#{avilableNum},status=#{status},remark=#{remark} 
+		where type_id = #{type_id}
+	</update>
+	<!-- 房间类型信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.RoomType">
+		select * from room_type where 1 = 1 
+		<if test="type_name != null">
+			and type_name like '%${type_name}%' 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取所有房间类型 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.RoomType">
+		select * from  room_type 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取单个房间类型信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.RoomType">
+		select * from  room_type where type_id=#{value} 
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from room_type where 1=1 
+		<if test="type_name != null">
+		and type_name like '%${type_name}%' 
+		</if>
+		<if test="status != null">
+		and status = #{status} 
+		</if>
+	</select>
+	<!-- 删除房间类型信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from room_type where type_id = ${value}
+	</delete>
+</mapper>

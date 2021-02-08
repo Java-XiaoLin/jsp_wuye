@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.NoticeDao">
+	<!-- 通告栏添加操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.Notice">
+		insert into notice(notice_id,noticeDate,notice_content) 
+		values(null,#{noticeDate},#{notice_content})
+	</insert>
+	<!-- 通告栏编辑操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.Notice">
+		update notice set noticeDate=#{noticeDate},notice_content=#{notice_content} where notice_id = #{notice_id}
+	</update>
+	<!-- 通告栏信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Notice">
+		select * from notice  
+		<if test="repairDate != null">
+			where noticeDate like '%${noticeDate}%' 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 根据通告栏ID获取单个通告栏信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.Notice">
+		select * from  news where notice_id=#{value} 
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from notice  
+		<if test="repairDate != null">
+			where noticeDate like '%${noticeDate}%' 
+		</if>
+	</select>
+	<!-- 获取所有通告栏信息 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Notice">
+		select * from  notice 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 删除通告栏信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from notice where notice_id = ${value}
+	</delete>
+</mapper>

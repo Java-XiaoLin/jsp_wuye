@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.NewsDao">
+	<!-- 资讯添加操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.News">
+		insert into news(news_id,news_title,newsDate,count,news_content) 
+		values(null,#{news_title},#{newsDate},#{count},#{news_content})
+	</insert>
+	<!-- 资讯编辑操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.News">
+		update news set news_title=#{news_title},newsDate=#{newsDate},count=#{count},news_content=#{news_content} where news_id = #{news_id}
+	</update>
+	<!-- 资讯信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.News">
+		select * from news  
+		<if test="repairDate != null">
+			where newsDate like '%${newsDate}%' 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 根据资讯ID获取单个资讯信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.News">
+		select * from  news where news_id=#{value} 
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from news  
+		<if test="repairDate != null">
+			where newsDate like '%${newsDate}%' 
+		</if>
+	</select>
+	<!-- 获取所有资讯信息 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.News">
+		select * from  news 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 删除资讯信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from news where news_id = ${value}
+	</delete>
+</mapper>

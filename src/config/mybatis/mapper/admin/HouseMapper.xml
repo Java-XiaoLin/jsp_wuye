@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.admin.HouseDao">
+	<!-- 房屋插入操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.admin.House">
+		insert into house(house_id,house_no,building_id,type_id,yz_id,house_photo,status,remark) 
+		values(null,#{house_no},#{building_id},#{type_id},#{yz_id},#{house_photo},#{status},#{remark})
+	</insert>
+	<!-- 房屋编辑操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.admin.House">
+		update house set house_no = #{house_no},building_id=#{building_id},
+		type_id=#{type_id},yz_id=#{yz_id},house_photo=#{house_photo},status=#{status},remark=#{remark} 
+		where house_id = #{house_id}
+	</update>
+	<!-- 房屋信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.admin.House">
+		select * from house where 1=1 
+		<if test="house_no != null">
+			and house_no like '%${house_no}%' 
+		</if>
+		<if test="building_id != null">
+			and building_id = #{building_id} 
+		</if>
+		<if test="type_id != null">
+			and type_id = #{type_id} 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取所有房间 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.admin.House">
+		select * from house 
+	</select>
+	<!-- 获取单个房间信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.admin.House">
+		select * from  house where house_id=#{value} 
+	</select>
+	<!-- 获取单个房间信息 -->
+	<select id="findByhouse_no" parameterType="String" resultType="com.ischoolbar.programmer.entity.admin.House">
+		select * from  house where house_no = #{value} 
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from house where 1=1 
+		<if test="house_no != null">
+			and house_no like '%${house_no}%' 
+		</if>
+		<if test="building_id != null">
+			and building_id = #{building_id} 
+		</if>
+		<if test="type_id != null">
+			and type_id = #{type_id} 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+	</select>
+	<!-- 删除房屋信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from house where house_id = ${value}
+	</delete>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.FeeDao">
+	<!-- 收费添加操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.Fee">
+		insert into fee(fee_id,feetype_id,fee_money,start_date,final_date,yezhu_id,status,fee_photo,remark) 
+		values(null,#{feetype_id},#{fee_money},#{start_date},#{final_date},#{yezhu_id},#{status},#{fee_photo},#{remark})
+	</insert>
+	<!-- 缴费操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.Fee">
+		update fee set status=#{status},fee_photo=#{fee_photo},remark=#{remark} where fee_id = #{fee_id}
+	</update>
+	<!-- 确认缴费操作 -->
+	<update id="edit_1" parameterType="com.ischoolbar.programmer.entity.Fee">
+		update fee set status=#{status} where fee_id = #{fee_id}
+	</update>
+	<!-- 取消缴费操作 -->
+	<update id="edit_2" parameterType="com.ischoolbar.programmer.entity.Fee">
+		update fee set status=#{status},remark=#{remark} where fee_id = #{fee_id}
+	</update>
+	<!-- 收费信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Fee">
+		select * from fee where 1 = 1 
+		<if test="feetype_id != null">
+			and feetype_id = #{feetype_id} 
+		</if>
+		<if test="start_date != null">
+			and start_date like '%${start_date}%' 
+		</if>
+		<if test="yezhu_id != null">
+			and yezhu_id = #{yezhu_id} 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 根据收费ID获取单个收费信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.Fee">
+		select * from  fee where fee_id=#{value} 
+	</select>
+
+	<!-- 获取所有收费信息 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Fee">
+		select * from  fee 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取所有收费类型信息 -->
+	<select id="findAllFeeType" parameterType="Map" resultType="com.ischoolbar.programmer.entity.FeeType">
+		select * from  fee_type 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from fee where 1=1 
+	<if test="feetype_id != null">
+			and feetype_id = #{feetype_id} 
+		</if>
+		<if test="start_date != null">
+			and start_date like '%${start_date}%' 
+		</if>
+		<if test="yezhu_id != null">
+			and yezhu_id = #{yezhu_id} 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+	</select>
+	<!-- 删除收费信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from fee where fee_id = ${value}
+	</delete>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.admin.BuildingDao">
+	<!-- 楼房插入操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.admin.Building">
+		insert into building(building_id,building_name,building_remark) 
+		values(null,#{building_name},#{building_remark})
+	</insert>
+	<!-- 楼房编辑操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.admin.Building">
+		update building set building_name=#{building_name},building_remark=#{building_remark} 
+		where building_id = #{building_id}
+	</update>
+	<!-- 楼房信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.admin.Building">
+		select * from building 
+		<if test="building_name != null">
+			where building_name like '%${building_name}%' 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取所有楼房 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.admin.Building">
+		select * from building 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from building 
+		<if test="building_name != null">
+			where building_name like '%${building_name}%' 
+		</if>
+	</select>
+	<!-- 删除楼房信息 -->
+	<delete id="delete" parameterType="String">
+		delete from building where building_id = ${value}
+	</delete>
+</mapper>

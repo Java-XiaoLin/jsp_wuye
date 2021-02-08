@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.RepairDao">
+	<!-- 报修添加操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.Repair">
+		insert into repair(rep_id,yezhu_id,repairDate,status,rep_question,rep_result,remark) 
+		values(null,#{yezhu_id},#{repairDate},#{status},#{rep_question},#{rep_result},#{remark})
+	</insert>
+	<!-- 报修处理操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.Repair">
+		update repair set yezhu_id=#{yezhu_id},repairDate=#{repairDate},status=#{status},rep_question=#{rep_question},rep_result=#{rep_result},
+		remark=#{remark} where rep_id = #{rep_id}
+	</update>
+	<!-- 报修信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Repair">
+		select * from repair where 1 = 1 
+		<if test="yezhu_id != null">
+			and yezhu_id = #{yezhu_id} 
+		</if>
+		<if test="repairDate != null">
+			and repairDate like '%${repairDate}%' 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 根据报修ID获取单个报修信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.Repair">
+		select * from  repair where rep_id=#{value} 
+	</select>
+
+	<!-- 获取所有报修信息 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Repair">
+		select * from  repair 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from repair where 1=1 
+		<if test="yezhu_id != null">
+			and yezhu_id = #{yezhu_id} 
+		</if>
+		<if test="repairDate != null">
+			and repairDate like '%${repairDate}%' 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+	</select>
+	<!-- 删除报修信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from repair where rep_id = ${value}
+	</delete>
+</mapper>

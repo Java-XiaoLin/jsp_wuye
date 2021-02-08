@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.ComplaintDao">
+	<!-- 投诉添加操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.Complaint">
+		insert into complaint(com_id,yezhu_id,complaintDate,status,com_question,com_result,remark) 
+		values(null,#{yezhu_id},#{complaintDate},#{status},#{com_question},#{com_result},#{remark})
+	</insert>
+	<!-- 投诉处理操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.Complaint">
+		update complaint set yezhu_id=#{yezhu_id},status=#{status},com_result=#{com_result},
+		remark=#{remark} where com_id = #{com_id}
+	</update>
+	<!-- 投诉信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Complaint">
+		select * from complaint where 1 = 1 
+		<if test="yezhu_id != null">
+			and yezhu_id = #{yezhu_id} 
+		</if>
+		<if test="repairDate != null">
+			and complaintDate like '%${complaintDate}%' 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 根据投诉ID获取单个投诉信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.Complaint">
+		select * from  complaint where com_id=#{value} 
+	</select>
+
+	<!-- 获取所有投诉信息 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Complaint">
+		select * from  complaint 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from complaint where 1=1 
+		<if test="yezhu_id != null">
+			and yezhu_id = #{yezhu_id} 
+		</if>
+		<if test="repairDate != null">
+			and complaintDate like '%${complaintDate}%' 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+	</select>
+	<!-- 删除投诉信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from complaint where com_id = ${value}
+	</delete>
+</mapper>

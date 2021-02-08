@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.ParkingDao">
+	<!-- 停车场插入操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.Parking">
+		insert into parking(park_id,park_no,car_no,yezhu_id,status,remark) 
+		values(null,#{park_no},#{car_no},#{yezhu_id},#{status},#{remark})
+	</insert>
+	<!-- 停车场编辑操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.Parking">
+		update parking set park_no=#{park_no},car_no=#{car_no},yezhu_id=#{yezhu_id},status=#{status},remark=#{remark} where park_id = #{park_id}
+	</update>
+	<!-- 停车场信息模糊搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Parking">
+		select * from parking where 1 = 1 
+		<if test="yezhu_id != null">
+			and yezhu_id = #{yezhu_id} 
+		</if>
+		<if test="car_no != null">
+			and park_no like '%${park_no}%' 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<!-- 获取单个停车场信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.Parking">
+		select * from  parking where park_id=#{value} 
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from parking where 1=1 
+		<if test="park_id != null">
+			and park_id = #{park_id} 
+		</if>
+		<if test="car_no != null">
+			and park_no like '%${park_no}%' 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+	</select>
+	<!-- 删除停车场信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from parking where park_id = ${value}
+	</delete>
+</mapper>

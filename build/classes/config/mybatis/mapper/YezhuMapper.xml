@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.YezhuDao">
+	<!-- 学生插入操作 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.Yezhu">
+		insert into yezhu(yezhu_id,yz_photo,name,yz_password,yz_name,yz_sex,idCard,yz_phone,yz_email,house_id,roleid) 
+		values(null,#{yz_photo},#{name},#{yz_password},#{yz_name},#{yz_sex},#{idCard},#{yz_phone},#{yz_email},#{house_id},3)
+	</insert>
+	<!-- 学生编辑操作 -->
+	<update id="edit" parameterType="com.ischoolbar.programmer.entity.Yezhu">
+		update yezhu set yz_photo=#{yz_photo},name=#{name},yz_name=#{yz_name},yz_sex=#{yz_sex},idCard=#{idCard},yz_phone=#{yz_phone},
+		yz_email=#{yz_email},roleid=3 where yezhu_id = #{yezhu_id}
+	</update>
+	<!-- 学生密码编辑操作 -->
+	<update id="edit_password" parameterType="com.ischoolbar.programmer.entity.Yezhu">
+		update yezhu set yz_password=#{yz_password} where name = #{name}
+	</update>
+	<!-- 学生绑定房屋编辑操作 -->
+	<update id="edit_1" parameterType="com.ischoolbar.programmer.entity.Yezhu">
+		update yezhu set house_id=#{house_id} where yezhu_id = #{yezhu_id}
+	</update>
+	<!-- 学生解除绑定房屋操作 -->
+	<update id="edit_2" parameterType="com.ischoolbar.programmer.entity.Yezhu">
+		update yezhu set house_id=#{house_id} where yezhu_id = #{yezhu_id}
+	</update>
+	<!-- 学生信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Yezhu">
+		select * from yezhu where 1 = 1 
+		<if test="yz_name != null">
+			and yz_name like '%${yz_name}%' 
+		</if>
+		<if test="house_id!= null">
+			and house_id = #{house_id} 
+		</if>
+		<if test="yz_phone != null">
+			and yz_phone like '%${yz_phone}%' 
+		</if>
+		<if test="idCard != null">
+			and idCard like '%${idCard}%' 
+		</if>
+		<if test="yz_sex != null">
+			and yz_sex = #{yz_sex} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 根据用户名获取学生信息 -->
+	<select id="findByname" parameterType="String" resultType="com.ischoolbar.programmer.entity.Yezhu">
+		select * from  yezhu where name=#{value}
+	</select>
+	<!-- 根据用户roleid获取学生信息 -->
+	<select id="findByRoleId" parameterType="Long" resultType="com.ischoolbar.programmer.entity.Yezhu">
+		select * from  yezhu where roleid=#{value}
+	</select>
+	<!-- 获取单个学生信息 -->
+	<select id="find" parameterType="Long" resultType="com.ischoolbar.programmer.entity.Yezhu">
+		select * from  yezhu where yezhu_id=#{value} 
+	</select>
+	<!-- 获取所有房间类型 -->
+	<select id="findAll" parameterType="Map" resultType="com.ischoolbar.programmer.entity.Yezhu">
+		select * from  yezhu 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from yezhu where 1=1 
+		<if test="yz_name != null">
+		and yz_name like '%${yz_name}%' 
+		</if>
+		<if test="yz_sex != null">
+		and yz_sex = #{yz_sex} 
+		</if>
+	</select>
+	<!-- 删除学生信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from yezhu where yezhu_id = ${value}
+	</delete>
+</mapper>
